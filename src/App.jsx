@@ -288,7 +288,7 @@ const DetailModal = ({ item, onClose }) => (
                      <div className="text-xl font-bold text-emerald-800">{item.price}</div>
                    </div>
                    <a 
-  href="MASUKKAN_LINK_GOOGLE_DRIVE_DISINI" 
+  href="https://drive.google.com/file/d/1K6Wxe2eUqa1mSP34-9yTPn4jCG5ztfSM/view?usp=drive_link" 
   target="_blank" 
   rel="noopener noreferrer"
   className="text-sm text-emerald-700 font-semibold underline hover:text-emerald-900"
