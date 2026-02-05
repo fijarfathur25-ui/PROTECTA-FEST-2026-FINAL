@@ -287,9 +287,16 @@ const DetailModal = ({ item, onClose }) => (
                      <span className="text-xs text-emerald-600 font-bold uppercase">Biaya Pendaftaran</span>
                      <div className="text-xl font-bold text-emerald-800">{item.price}</div>
                    </div>
-                   <button className="text-sm text-emerald-700 font-semibold underline hover:text-emerald-900">
-                     Download Panduan Lengkap PDF
-                   </button>
+                   <a 
+  href="MASUKKAN_LINK_GOOGLE_DRIVE_DISINI" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  className="text-sm text-emerald-700 font-semibold underline hover:text-emerald-900"
+>
+  Download Panduan Lengkap PDF
+</a>
+                     
+  
                 </div>
               </div>
             </div>
