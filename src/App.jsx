@@ -634,7 +634,6 @@ const AdminPanel = ({ user }) => {
             </button>
           </form>
           <div className="mt-6 text-center text-xs text-gray-400 border-t border-gray-100 pt-4">
-            Gunakan password: <strong>himasita2026</strong>
           </div>
         </div>
       </div>
@@ -748,11 +747,11 @@ const Footer = () => (
           </li>
           <li className="flex items-center">
             <Mail className="w-5 h-5 mr-3 text-yellow-500 flex-shrink-0" /> 
-            <span>cpf2026@unsoed.ac.id</span>
+            <span>himasita.site1@gmail.com</span>
           </li>
           <li className="flex items-center">
             <Phone className="w-5 h-5 mr-3 text-yellow-500 flex-shrink-0" /> 
-            <span>+62 812-3456-7890 (Humas)</span>
+            <span>+62 812-3456-7890 (Narahubung)</span>
           </li>
         </ul>
       </div>
