@@ -39,18 +39,17 @@ const COMPETITION_DATA = [
     target: "Mahasiswa S1/D3/D4",
     shortDesc: "Kompetisi karya tulis ilmiah inovatif seputar teknologi perlindungan tanaman.",
     fullDesc: "Lomba Karya Tulis Ilmiah (LKTI) tingkat nasional ini mewadahi mahasiswa untuk menuangkan ide kreatif dan inovatif berbasis riset atau tinjauan pustaka dalam mengatasi permasalahan hama dan penyakit tumbuhan.",
-    theme: "Inovasi Teknologi Perlindungan Tanaman di Era Society 5.0",
+    theme: "Transformasi Sistem Perlindungan Tanaman Berbasis Ekologi dalam Lanskap Pertanian Ramah Lingkungan",
     subThemes: [
-      "Pemanfaatan Agens Hayati",
-      "IoT dan AI dalam Monitoring Hama",
-      "Bioteknologi Pertanian",
-      "Pertanian Presisi Ramah Lingkungan"
+      "Digitalisasi Biosekuriti untuk Pencegahan OPT pada Tanaman Budidaya",
+      "Pengendalian Hama Berbasis Data dan Ekosistem",
+      "Formulasi Biopestisida dan Pestisida Nabati dalam Mewujudkan Pertanian Berkelanjutan",
     ],
     timeline: [
-      "Pendaftaran & Abstrak: 1 Jan - 20 Feb 2026",
-      "Pengumuman Abstrak: 25 Feb 2026",
-      "Pengumpulan Full Paper: 26 Feb - 20 Mar 2026",
-      "Grand Final (Presentasi): 20 April 2026"
+      "Pendaftaran & Abstrak: 25 Maret - 9 April 2026",
+      "Penjurian: 16 - 20 April 2026",
+      "Pengumuman Semi Finalis: 21 April 2026",
+      "Grand Final (Presentasi) & Awarding: 26 April 2026"
     ],
     price: "Rp 150.000 / Tim",
     color: "bg-blue-500",
@@ -63,18 +62,19 @@ const COMPETITION_DATA = [
     target: "Siswa SMA/Sederajat",
     shortDesc: "Tuangkan gagasan kritis dan solutifmu tentang masa depan pertanian Indonesia.",
     fullDesc: "Kompetisi Esai Nasional untuk siswa SMA/sederajat yang bertujuan melatih kemampuan berpikir kritis dan menulis argumentatif mengenai isu ketahanan pangan nasional.",
-    theme: "Peran Gen-Z dalam Menjaga Ketahanan Pangan Nasional",
+    theme: "Akselerasi Gen-Z : Menjawab Tantangan Pangan Nasional melalui Perlindungan Tanaman",
     subThemes: [
-      "Urban Farming Solusi Lahan Sempit",
-      "Regenerasi Petani Muda",
-      "Pangan Lokal vs Pangan Impor"
+      "Inovasi Kebun Vertikal dan Hidroponik Cerdas untuk Kemandirian Pangan Masa Depan",
+      "Implementasi IoT untuk Deteksi Dini Hama dan Monitoring Kesehatan Tanaman secara Real Time",
+      "Rekayasa Bioekologi untuk Tanaman Resisten terhadap Perubahan Iklim"
     ],
     timeline: [
-      "Pendaftaran & Pengumpulan: 10 Jan - 15 Mar 2026",
-      "Penjurian: 16 - 30 Mar 2026",
-      "Pengumuman Pemenang: 20 April 2026"
+      "Pendaftaran & Abstrak: 25 Maret - 9 April 2026",
+      "Penjurian: 16 - 20 April 2026",
+      "Pengumuman Semi Finalis: 21 April 2026",
+      "Grand Final (Presentasi) & Awarding: 26 April 2026"
     ],
-    price: "Rp 50.000 / Orang",
+    price: "Rp 85.000 / Tim",
     color: "bg-yellow-500",
     guidebookLink: "#"
   },
@@ -85,18 +85,20 @@ const COMPETITION_DATA = [
     target: "Umum (Mahasiswa/SMA)",
     shortDesc: "Abadikan momen perlindungan tanaman dan ekosistem pertanian dalam lensa.",
     fullDesc: "Lomba fotografi yang mengangkat sisi estetika, human interest, dan teknis dari kegiatan pertanian, khususnya aspek perlindungan tanaman dari hama dan penyakit.",
-    theme: "Harmoni Alam dan Manusia dalam Pertanian",
+    theme: "The Art of Resilience : Keindahan Ilmiah dalam Perlindungan Tanaman",
     subThemes: [
-      "Aktivitas Petani di Lahan",
-      "Detail Hama atau Musuh Alami (Makro)",
-      "Lansekap Pertanian Berkelanjutan"
+      "Pest in Action : Serangga Hama pada Tanaman Budidaya",
+      "Predasi Musuh Alami",
+      "Peran Polinator dalam Pertanian"
+      "Harmoni Alam dalam Lanskap Pertanian"
     ],
     timeline: [
-      "Upload Karya: 1 Jan - 10 April 2026",
-      "Penjurian & Vote Likes: 11 - 18 April 2026",
-      "Pameran & Pengumuman: 20 April 2026"
+      "Pendaftaran & Abstrak: 25 Maret - 9 April 2026",
+      "Penjurian: 16 - 20 April 2026",
+      "Pengumuman Semi Finalis: 21 April 2026",
+      "Grand Final (Presentasi) & Awarding: 26 April 2026"
     ],
-    price: "Rp 75.000 / Orang",
+    price: "Rp 85.000 / Orang",
     color: "bg-purple-500",
     guidebookLink: "#"
   }
@@ -184,7 +186,7 @@ const Hero = ({ setActiveTab }) => (
           CROP PROTECTION <br/> FEST <span className="text-yellow-400">2026</span>
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-xl md:text-2xl text-emerald-50 font-light leading-relaxed">
-          "Inovasi Generasi Muda dalam Mewujudkan Pertanian Berkelanjutan Melalui Perlindungan Tanaman"
+          "Inovasi Generasi Muda dalam Mengakselerasi Teknologi Perlindungan Tanaman untuk Mewujudkan Ketahanan Pangan"
         </p>
         
         <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
@@ -218,10 +220,10 @@ const Timeline = () => (
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
           {[
-            { date: "Jan - Mar 2026", title: "Pendaftaran", desc: "Registrasi & Pengumpulan", icon: Calendar },
-            { date: "April 2026", title: "Penjurian", desc: "Seleksi Karya Terbaik", icon: Users },
-            { date: "15 April 2026", title: "Pengumuman", desc: "Rilis Finalis 10 Besar", icon: AlertCircle },
-            { date: "20 April 2026", title: "Awarding Night", desc: "Puncak Dies Natalis", icon: Award },
+            { date: "25 Maret - 9 April 2026", title: "Pendaftaran", desc: "Registrasi & Pengumpulan", icon: Calendar },
+            { date: "16 - April 2026", title: "Penjurian", desc: "Seleksi Karya Terbaik", icon: Users },
+            { date: "21 April 2026", title: "Pengumuman", desc: "Rilis Finalis 10 Besar", icon: AlertCircle },
+            { date: "26 April 2026", title: "Grand Final & Awarding", desc: "Puncak Dies Natalis", icon: Award },
           ].map((item, idx) => (
             <div key={idx} className="bg-white p-6 rounded-xl border border-gray-100 shadow-lg text-center md:hover:-translate-y-2 transition-transform duration-300">
               <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-white shadow-sm">
@@ -426,7 +428,7 @@ const SubmissionForm = ({ user }) => {
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Terima Kasih!</h2>
           <p className="text-gray-600 mb-8 text-lg">
-            Pendaftaran tim <b>{formData.teamName || "Anda"}</b> telah kami terima. Silakan cek email secara berkala.
+            Pendaftaran tim <b>{formData.teamName || "Anda"}</b> telah kami terima.
           </p>
           <button onClick={() => setSuccess(false)} className="w-full bg-gray-100 text-gray-800 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors">
             Kembali ke Form
@@ -623,7 +625,7 @@ const AdminPanel = ({ user }) => {
               <Lock className="w-8 h-8 text-emerald-700" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900">Admin Login</h2>
-            <p className="text-gray-500 text-sm">Area khusus panitia CPF 2026</p>
+            <p className="text-gray-500 text-sm">Area khusus panitia EPIC 2026</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
@@ -726,7 +728,7 @@ const Footer = () => (
           <Leaf className="mr-2 text-yellow-400" /> HIMASITA UNSOED
         </div>
         <p className="text-sm text-emerald-400 max-w-sm leading-relaxed mb-6">
-          Himpunan Mahasiswa Ilmu Hama dan Penyakit Tumbuhan Universitas Jenderal Soedirman. 
+          Himpunan Mahasiswa Proteksi Tanaman (HIMASITA) Universitas Jenderal Soedirman. 
           Bergerak bersama mewujudkan pertanian tangguh melalui perlindungan tanaman yang presisi dan berkelanjutan.
         </p>
         <div className="flex space-x-4">
@@ -738,7 +740,7 @@ const Footer = () => (
       <div>
         <h4 className="text-white font-bold mb-6 border-b border-emerald-800 pb-2 inline-block">Navigasi Cepat</h4>
         <ul className="space-y-3 text-sm">
-          <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> Tentang CPF 2026</a></li>
+          <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> Tentang EPIC 2026</a></li>
           <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> Panduan Lomba</a></li>
           <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> Timeline Kegiatan</a></li>
           <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> FAQ</a></li>
@@ -764,8 +766,7 @@ const Footer = () => (
       </div>
     </div>
     <div className="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-emerald-900 text-center text-xs text-emerald-500">
-      &copy; 2026 Crop Protection Fest - HIMASITA UNSOED. Developed for Simulation.
-    </div>
+      &copy; 2026 EPIC (Excellent Plant Protection Innovation Competition) - HIMASITA UNSOED.
   </footer>
 );
 
