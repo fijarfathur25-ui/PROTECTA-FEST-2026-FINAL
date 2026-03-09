@@ -28,7 +28,7 @@ try {
 }
 
 // Nama Koleksi Database
-const COLLECTION_NAME = "pendaftaran_cpf_2026";
+const COLLECTION_NAME = "pendaftaran_epic_2026";
 
 // --- DATA LOMBA ---
 const COMPETITION_DATA = [
