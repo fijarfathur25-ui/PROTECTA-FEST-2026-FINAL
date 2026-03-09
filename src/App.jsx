@@ -34,7 +34,7 @@ const COLLECTION_NAME = "pendaftaran_epic_2026";
 const COMPETITION_DATA = [
   {
     id: 'lkti',
-    title: "LKTI Nasional",
+    title: "LKTI Nasional EPIC",
     icon: BookOpen,
     target: "Mahasiswa S1/D3/D4",
     shortDesc: "Kompetisi karya tulis ilmiah inovatif seputar teknologi perlindungan tanaman.",
