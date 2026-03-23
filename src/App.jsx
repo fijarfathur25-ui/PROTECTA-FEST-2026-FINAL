@@ -1,11 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { Leaf, Camera, BookOpen, PenTool, Calendar, Award, Users, ChevronRight, CheckCircle, MapPin, Mail, Phone, ExternalLink, Menu, X, Lock, Download, Info, Clock, AlertCircle } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, addDoc, query, onSnapshot, orderBy, serverTimestamp } from 'firebase/firestore';
-
 // ==========================================
-// ✅ KONFIGURASI FIREBASE ASLI
+// ✅ KONFIGURASI FIREBASE ASLI (TIDAK DIUBAH)
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyB0xaaIaOhPZ9uAs96qo_uxefJot0YUDo0",
@@ -16,8 +16,6 @@ const firebaseConfig = {
   appId: "1:231334572462:web:96716d477eacaae56ed83f"
 };
 
-// Inisialisasi Firebase
-// Note: Menggunakan try-catch agar preview tidak crash jika config bermasalah
 let app, auth, db;
 try {
   app = initializeApp(firebaseConfig);
@@ -27,10 +25,9 @@ try {
   console.error("Firebase Init Error:", error);
 }
 
-// Nama Koleksi Database
 const COLLECTION_NAME = "pendaftaran_epic_2026";
 
-// --- DATA LOMBA ---
+// --- DATA LOMBA EPIC ---
 const COMPETITION_DATA = [
   {
     id: 'lkti',
@@ -38,22 +35,20 @@ const COMPETITION_DATA = [
     icon: BookOpen,
     target: "Mahasiswa S1/D3/D4",
     shortDesc: "Kompetisi karya tulis ilmiah inovatif seputar teknologi perlindungan tanaman.",
-    fullDesc: "Lomba Karya Tulis Ilmiah (LKTI) tingkat nasional ini mewadahi mahasiswa untuk menuangkan ide kreatif dan inovatif berbasis riset atau tinjauan pustaka dalam mengatasi permasalahan hama dan penyakit tumbuhan.",
-    theme: "Transformasi Sistem Perlindungan Tanaman Berbasis Ekologi dalam Lanskap Pertanian Ramah Lingkungan",
+    theme: "Transformasi Sistem Perlindungan Tanaman Berbasis Ekologi",
     subThemes: [
       "Digitalisasi Biosekuriti untuk Pencegahan OPT pada Tanaman Budidaya",
       "Pengendalian Hama Berbasis Data dan Ekosistem",
-      "Formulasi Biopestisida dan Pestisida Nabati dalam Mewujudkan Pertanian Berkelanjutan",
+      "Formulasi Biopestisida dan Pestisida Nabati"
     ],
     timeline: [
-      "Pendaftaran & Abstrak: 25 Maret - 9 April 2026",
-      "Penjurian: 16 - 20 April 2026",
-      "Pengumuman Semi Finalis: 21 April 2026",
-      "Grand Final (Presentasi) & Awarding: 26 April 2026"
+      "Pendaftaran & Abstrak: 25 Mar - 9 Apr 2026",
+      "Penjurian: 16 - 20 Apr 2026",
+      "Grand Final: 26 Apr 2026"
     ],
     price: "Rp 150.000 / Tim",
-    color: "bg-blue-500",
-    guidebookLink: "#"
+    color: "bg-blue-500 text-blue-500",
+    bgLight: "bg-blue-50"
   },
   {
     id: 'essay',
@@ -61,22 +56,20 @@ const COMPETITION_DATA = [
     icon: PenTool,
     target: "Siswa SMA/Sederajat",
     shortDesc: "Tuangkan gagasan kritis dan solutifmu tentang masa depan pertanian Indonesia.",
-    fullDesc: "Kompetisi Esai Nasional untuk siswa SMA/sederajat yang bertujuan melatih kemampuan berpikir kritis dan menulis argumentatif mengenai isu ketahanan pangan nasional.",
-    theme: "Akselerasi Gen-Z : Menjawab Tantangan Pangan Nasional melalui Perlindungan Tanaman",
+    theme: "Akselerasi Gen-Z : Menjawab Tantangan Pangan Nasional",
     subThemes: [
-      "Inovasi Kebun Vertikal dan Hidroponik Cerdas untuk Kemandirian Pangan Masa Depan",
-      "Implementasi IoT untuk Deteksi Dini Hama dan Monitoring Kesehatan Tanaman secara Real Time",
-      "Rekayasa Bioekologi untuk Tanaman Resisten terhadap Perubahan Iklim"
+      "Inovasi Kebun Vertikal dan Hidroponik Cerdas",
+      "Implementasi IoT untuk Deteksi Dini Hama",
+      "Rekayasa Bioekologi Tahan Iklim"
     ],
     timeline: [
-      "Pendaftaran & Abstrak: 25 Maret - 9 April 2026",
-      "Penjurian: 16 - 20 April 2026",
-      "Pengumuman Semi Finalis: 21 April 2026",
-      "Grand Final (Presentasi) & Awarding: 26 April 2026"
+      "Pendaftaran & Abstrak: 25 Mar - 9 Apr 2026",
+      "Penjurian: 16 - 20 Apr 2026",
+      "Grand Final: 26 Apr 2026"
     ],
     price: "Rp 85.000 / Tim",
-    color: "bg-yellow-500",
-    guidebookLink: "#"
+    color: "bg-yellow-500 text-yellow-600",
+    bgLight: "bg-yellow-50"
   },
   {
     id: 'foto',
@@ -84,320 +77,310 @@ const COMPETITION_DATA = [
     icon: Camera,
     target: "Umum (Mahasiswa/SMA)",
     shortDesc: "Abadikan momen perlindungan tanaman dan ekosistem pertanian dalam lensa.",
-    fullDesc: "Lomba fotografi yang mengangkat sisi estetika, human interest, dan teknis dari kegiatan pertanian, khususnya aspek perlindungan tanaman dari hama dan penyakit.",
-    theme: "The Art of Resilience : Keindahan Ilmiah dalam Perlindungan Tanaman",
+    theme: "The Art of Resilience : Keindahan Ilmiah Perlindungan Tanaman",
     subThemes: [
-      "Pest in Action : Serangga Hama pada Tanaman Budidaya",
+      "Pest in Action : Serangga Hama",
       "Predasi Musuh Alami",
       "Peran Polinator dalam Pertanian"
-      "Harmoni Alam dalam Lanskap Pertanian"
     ],
     timeline: [
-      "Pendaftaran & Abstrak: 25 Maret - 9 April 2026",
-      "Penjurian: 16 - 20 April 2026",
-      "Pengumuman Semi Finalis: 21 April 2026",
-      "Grand Final (Presentasi) & Awarding: 26 April 2026"
+      "Upload Karya: 25 Mar - 9 Apr 2026",
+      "Penjurian: 16 - 20 Apr 2026",
+      "Pengumuman: 26 Apr 2026"
     ],
     price: "Rp 85.000 / Orang",
-    color: "bg-purple-500",
-    guidebookLink: "#"
+    color: "bg-purple-500 text-purple-500",
+    bgLight: "bg-purple-50"
   }
 ];
 
-// --- COMPONENTS ---
+// ==========================================
+// VIEW: TENTANG EPIC (MENU BARU)
+// ==========================================
+const ViewTentang = () => (
+  <div className="pb-24 md:pb-6 space-y-6">
+    <div className="mb-8">
+      <h1 className="text-3xl font-black text-gray-900">Tentang EPIC 2026</h1>
+      <p className="text-gray-500">Mengenal lebih dekat inovasi perlindungan tanaman.</p>
+    </div>
 
-const Navbar = ({ activeTab, setActiveTab }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <nav className="sticky top-0 z-50 bg-emerald-900/95 backdrop-blur-md text-white shadow-lg border-b border-emerald-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center cursor-pointer" onClick={() => setActiveTab('home')}>
-            <div className="bg-white p-1.5 rounded-full mr-2">
-              <Leaf className="h-6 w-6 text-emerald-700" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-xl tracking-wider leading-none">CPF 2026</span>
-              <span className="text-[10px] text-emerald-300 tracking-widest">HIMASITA UNSOED</span>
-            </div>
-          </div>
-          
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {['Home', 'Lomba', 'Daftar', 'Admin'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => setActiveTab(item.toLowerCase())}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === item.toLowerCase()
-                      ? 'bg-emerald-700 text-white'
-                      : 'text-emerald-100 hover:bg-emerald-800'
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="md:hidden flex items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-emerald-100 hover:text-white p-2">
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
+    <div className="bg-emerald-900 text-white p-8 rounded-3xl shadow-lg relative overflow-hidden">
+      <div className="absolute -right-10 -bottom-10 opacity-10">
+        <Leaf size={200} />
       </div>
-
-      {isOpen && (
-        <div className="md:hidden bg-emerald-800 px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-emerald-700 shadow-xl">
-          {['Home', 'Lomba', 'Daftar', 'Admin'].map((item) => (
-            <button
-              key={item}
-              onClick={() => {
-                setActiveTab(item.toLowerCase());
-                setIsOpen(false);
-              }}
-              className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${
-                activeTab === item.toLowerCase() ? 'bg-emerald-900 text-white' : 'text-emerald-100 hover:bg-emerald-700'
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      )}
-    </nav>
-  );
-};
-
-const Hero = ({ setActiveTab }) => (
-  <div className="relative bg-emerald-900 text-white overflow-hidden min-h-[85vh] flex flex-col justify-center">
-    <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')] bg-cover bg-center" />
-    <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/50 via-emerald-900/20 to-emerald-900" />
-    
-    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center z-10">
-      <div className="animate-fade-in-up">
-        <div className="inline-flex items-center gap-2 py-1 px-4 rounded-full bg-emerald-800/80 border border-emerald-600 text-emerald-100 text-sm font-semibold mb-6 backdrop-blur-sm">
-          <Award className="w-4 h-4 text-yellow-400" />
-          Dies Natalis HIMASITA UNSOED ke-1
-        </div>
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight drop-shadow-lg">
-          CROP PROTECTION <br/> FEST <span className="text-yellow-400">2026</span>
-        </h1>
-        <p className="mt-4 max-w-2xl mx-auto text-xl md:text-2xl text-emerald-50 font-light leading-relaxed">
-          "Inovasi Generasi Muda dalam Mengakselerasi Teknologi Perlindungan Tanaman untuk Mewujudkan Ketahanan Pangan"
+      <div className="relative z-10">
+        <h2 className="text-2xl font-bold mb-4 text-yellow-400">Visi & Skala Kompetisi</h2>
+        <p className="text-emerald-50 leading-relaxed mb-6">
+          EPIC (Excellent Plant Protection Innovation Competition) hadir sebagai panggung utama bagi generasi muda Indonesia untuk menuangkan gagasan solutif dan inovatif. Kami mengundang seluruh agen perubahan untuk berkontribusi nyata memajukan sektor pertanian yang presisi dan berkelanjutan.
         </p>
-        
-        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-          <button
-            onClick={() => setActiveTab('daftar')}
-            className="px-8 py-4 bg-yellow-400 text-emerald-900 text-lg font-bold rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 shadow-xl flex items-center justify-center gap-2"
-          >
-            Daftar Sekarang <ChevronRight className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => setActiveTab('lomba')}
-            className="px-8 py-4 border-2 border-white text-white text-lg font-bold rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-          >
-            Panduan Lomba <Download className="w-5 h-5" />
-          </button>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="bg-white/10 p-4 rounded-xl flex-1 border border-white/20 backdrop-blur-sm">
+            <h3 className="font-bold text-yellow-400 text-lg mb-1 flex items-center gap-2"><MapPin size={16}/> Tingkat Nasional</h3>
+            <p className="text-xs text-emerald-100">Menjangkau mahasiswa dan siswa SMA/sederajat dari seluruh penjuru perguruan tinggi dan sekolah di Indonesia.</p>
+          </div>
+          <div className="bg-white/10 p-4 rounded-xl flex-1 border border-white/20 backdrop-blur-sm">
+            <h3 className="font-bold text-blue-400 text-lg mb-1 flex items-center gap-2"><Award size={16}/> 3 Kategori Lomba</h3>
+            <p className="text-xs text-emerald-100">Menantang kemampuan analisis, literasi, dan kreativitas visual melalui LKTI, Essay, dan Fotografi Pertanian.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <Target className="text-yellow-500" /> Tujuan Utama
+        </h3>
+        <ul className="space-y-3 text-sm text-gray-600">
+          <li className="flex items-start gap-2"><CheckCircle size={16} className="text-emerald-500 shrink-0 mt-0.5" /> Mewadahi inovasi mahasiswa dan pelajar tingkat nasional di bidang perlindungan tanaman.</li>
+          <li className="flex items-start gap-2"><CheckCircle size={16} className="text-emerald-500 shrink-0 mt-0.5" /> Memperkenalkan eksistensi dan peran HIMASITA UNSOED kepada masyarakat luas.</li>
+          <li className="flex items-start gap-2"><CheckCircle size={16} className="text-emerald-500 shrink-0 mt-0.5" /> Mewujudkan pengabdian masyarakat nyata melalui program ABDISITA di bulan Ramadhan.</li>
+        </ul>
+      </div>
+      
+      <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col">
+        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <Award className="text-blue-500" /> Penyelenggara
+        </h3>
+        <p className="text-sm text-gray-600 leading-relaxed mb-6">
+          Diselenggarakan sepenuhnya oleh <strong>Himpunan Mahasiswa Proteksi Tanaman (HIMASITA)</strong> Universitas Jenderal Soedirman.
+        </p>
+        <div className="flex gap-4 mt-auto">
+          <div className="flex flex-col items-center">
+            <img src="/logo-himasita.png" alt="HIMASITA" className="h-16 w-16 object-contain bg-gray-50 rounded-xl p-2 border border-gray-200" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}/>
+            <div className="hidden h-16 w-16 bg-gray-100 rounded-xl items-center justify-center text-xs font-bold text-gray-400 border border-gray-200">HMT</div>
+            <span className="text-[10px] font-bold text-gray-500 mt-2">HIMASITA</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <img src="/logo-epic.png" alt="EPIC" className="h-16 w-16 object-contain bg-gray-50 rounded-xl p-2 border border-gray-200" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}/>
+            <div className="hidden h-16 w-16 bg-yellow-100 rounded-xl items-center justify-center text-xs font-bold text-yellow-600 border border-yellow-200">EPIC</div>
+            <span className="text-[10px] font-bold text-gray-500 mt-2">EPIC 2026</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 );
 
-const Timeline = () => (
-  <div className="py-16 bg-white border-b border-gray-100">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-extrabold text-emerald-900">Rangkaian Kegiatan</h2>
-        <div className="w-20 h-1 bg-yellow-400 mx-auto mt-4 rounded-full"></div>
+// ==========================================
+// VIEW: HOME (DASHBOARD WELCOME)
+// ==========================================
+const ViewHome = ({ setActiveTab }) => (
+  <div className="space-y-6 pb-24 md:pb-6">
+    <div className="bg-emerald-900 rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-xl">
+      <div className="absolute -right-10 -bottom-10 opacity-20 rotate-12">
+        <Leaf size={250} className="text-emerald-300" />
       </div>
-      <div className="relative">
-        <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-200 -translate-y-1/2 rounded-full"></div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+      <div className="relative z-10">
+        <div className="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-white/10 border border-white/20 text-emerald-100 text-xs font-bold uppercase mb-4">
+          <Award size={14} className="text-yellow-400" /> Dies Natalis HIMASITA ke-1
+        </div>
+        <h1 className="text-4xl md:text-6xl font-black text-white mb-4">
+          EPIC <span className="text-yellow-400">2026</span>
+        </h1>
+        <h2 className="text-xl md:text-2xl text-emerald-100 font-light mb-8 max-w-2xl">
+          Excellent Plant Protection Innovation Competition
+        </h2>
+        <div className="flex flex-wrap gap-4">
+          <button onClick={() => setActiveTab('daftar')} className="bg-yellow-400 hover:bg-yellow-300 text-emerald-950 font-bold px-6 py-3 rounded-xl transition-all shadow-lg flex items-center">
+            Daftar Sekarang <ChevronRight size={18} className="ml-1" />
+          </button>
+          <button onClick={() => setActiveTab('lomba')} className="bg-white/10 hover:bg-white/20 text-white font-medium px-6 py-3 rounded-xl transition-all border border-white/20 flex items-center">
+            Lihat Kategori Lomba
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="col-span-1 md:col-span-2 bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <Calendar className="text-emerald-600" /> Timeline Penting EPIC
+        </h3>
+        <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-300 before:to-transparent">
           {[
-            { date: "25 Maret - 9 April 2026", title: "Pendaftaran", desc: "Registrasi & Pengumpulan", icon: Calendar },
-            { date: "16 - April 2026", title: "Penjurian", desc: "Seleksi Karya Terbaik", icon: Users },
-            { date: "21 April 2026", title: "Pengumuman", desc: "Rilis Finalis 10 Besar", icon: AlertCircle },
-            { date: "26 April 2026", title: "Grand Final & Awarding", desc: "Puncak Dies Natalis", icon: Award },
-          ].map((item, idx) => (
-            <div key={idx} className="bg-white p-6 rounded-xl border border-gray-100 shadow-lg text-center md:hover:-translate-y-2 transition-transform duration-300">
-              <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-white shadow-sm">
-                <item.icon className="w-6 h-6" />
+            { date: "25 Mar - 9 Apr", event: "Pendaftaran & Pengumpulan Karya" },
+            { date: "16 - 20 Apr", event: "Tahap Penjurian" },
+            { date: "26 Apr 2026", event: "Grand Final & Awarding" }
+          ].map((item, i) => (
+            <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-emerald-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                <CheckCircle size={16} />
               </div>
-              <div className="text-sm font-bold text-yellow-600 mb-1 uppercase tracking-wide">{item.date}</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-              <p className="text-gray-500 text-sm">{item.desc}</p>
+              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-gray-100 shadow-sm bg-gray-50">
+                <div className="flex flex-col">
+                  <span className="font-bold text-emerald-700 text-sm">{item.date}</span>
+                  <span className="text-gray-800 font-medium">{item.event}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </div>
-    </div>
-  </div>
-);
 
-const DetailModal = ({ item, onClose }) => (
-  <div className="fixed inset-0 z-[60] overflow-y-auto" role="dialog" aria-modal="true">
-    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm" onClick={onClose}></div>
-      <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-      
-      <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full">
-        <div className={`h-3 w-full ${item.color}`}></div>
-        <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div className="sm:flex sm:items-start">
-            <div className={`mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full ${item.color.replace('bg-', 'bg-').replace('500', '100')} sm:mx-0 sm:h-10 sm:w-10`}>
-              <item.icon className={`h-6 w-6 ${item.color.replace('bg-', 'text-').replace('500', '600')}`} />
+      <div className="bg-gradient-to-br from-emerald-800 to-emerald-950 rounded-3xl p-8 shadow-sm text-white flex flex-col justify-between relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-10"><Award size={100} /></div>
+        <div className="relative z-10">
+          <h3 className="text-xl font-bold mb-2">Total Hadiah</h3>
+          <p className="text-sm text-emerald-200 mb-6">Jutaan Rupiah + Sertifikat + Relasi Nasional</p>
+          
+          <div className="space-y-4">
+            <div className="bg-white/10 p-4 rounded-xl border border-white/20">
+              <div className="text-2xl font-black text-yellow-400">3</div>
+              <div className="text-sm text-emerald-100">Kategori Lomba</div>
             </div>
-            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-              <h3 className="text-2xl leading-6 font-bold text-gray-900">
-                {item.title}
-              </h3>
-              <div className="mt-4 space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <span className="text-xs font-bold text-gray-400 uppercase">Tema</span>
-                  <p className="text-lg font-medium text-emerald-800">{item.theme}</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2 flex items-center"><Leaf className="w-4 h-4 mr-2 text-emerald-500"/> Sub-Tema</h4>
-                  <ul className="list-disc list-inside text-gray-600 text-sm space-y-1 ml-1">
-                    {item.subThemes.map((sub, idx) => (
-                      <li key={idx}>{sub}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2 flex items-center"><Clock className="w-4 h-4 mr-2 text-emerald-500"/> Timeline Penting</h4>
-                  <ul className="space-y-2">
-                    {item.timeline.map((time, idx) => (
-                      <li key={idx} className="text-sm flex justify-between border-b border-gray-100 pb-1">
-                        <span className="text-gray-600">{time.split(':')[0]}</span>
-                        <span className="font-semibold text-gray-900">{time.split(':')[1]}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex items-center justify-between bg-emerald-50 p-4 rounded-lg border border-emerald-100">
-                   <div>
-                     <span className="text-xs text-emerald-600 font-bold uppercase">Biaya Pendaftaran</span>
-                     <div className="text-xl font-bold text-emerald-800">{item.price}</div>
-                   </div>
-                   <a 
-  href="https://drive.google.com/file/d/1K6Wxe2eUqa1mSP34-9yTPn4jCG5ztfSM/view?usp=drive_link" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  className="text-sm text-emerald-700 font-semibold underline hover:text-emerald-900"
->
-  Download Panduan Lengkap PDF
-</a>
-                     
-  
-                </div>
-              </div>
+            <div className="bg-white/10 p-4 rounded-xl border border-white/20">
+              <div className="text-2xl font-black text-yellow-400">Nasional</div>
+              <div className="text-sm text-emerald-100">Tingkat Kompetisi</div>
             </div>
           </div>
         </div>
-        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button 
-            type="button" 
-            onClick={onClose}
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
-          >
-            Tutup
-          </button>
-        </div>
+        <button onClick={() => setActiveTab('daftar')} className="mt-8 w-full bg-white text-emerald-900 py-3 rounded-xl font-bold hover:bg-emerald-50 transition-colors z-10 relative">
+          Daftar Sekarang
+        </button>
       </div>
     </div>
   </div>
 );
 
-const Competitions = ({ setActiveTab }) => {
-  const [selectedLomba, setSelectedLomba] = useState(null);
+// ==========================================
+// VIEW: LOMBA (KATALOG)
+// ==========================================
+const ViewLomba = ({ setActiveTab }) => {
+  const [selected, setSelected] = useState(null);
 
   return (
-    <div className="py-20 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-base text-emerald-600 font-semibold tracking-wide uppercase">Kategori Lomba</h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Tunjukkan Karyamu
-          </p>
-          <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
-            Pilih kategori yang sesuai dan menangkan total hadiah jutaan rupiah.
-          </p>
-        </div>
+    <div className="pb-24 md:pb-6 relative">
+      <div className="mb-8">
+        <h1 className="text-3xl font-black text-gray-900">Kategori Lomba EPIC</h1>
+        <p className="text-gray-500">Pilih cabang kompetisi dan tunjukkan inovasi terbaikmu.</p>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {COMPETITION_DATA.map((lomba) => (
-            <div key={lomba.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-100 group flex flex-col h-full">
-              <div className={`h-2 w-full ${lomba.color}`} />
-              <div className="p-8 flex-grow flex flex-col">
-                <div className={`inline-flex p-3 rounded-lg ${lomba.color.replace('bg-', 'bg-').replace('500', '100')} ${lomba.color.replace('bg-', 'text-').replace('500', '700')} mb-4 w-fit`}>
-                  <lomba.icon className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{lomba.title}</h3>
-                <div className="flex items-center text-sm text-gray-500 mb-4 font-medium bg-gray-100 py-1 px-3 rounded-full w-fit">
-                  <Users className="h-3 w-3 mr-2" />
-                  {lomba.target}
-                </div>
-                <p className="text-gray-600 mb-6 flex-grow">{lomba.shortDesc}</p>
-                
-                <div className="mt-auto pt-6 border-t border-gray-100">
-                  <div className="flex justify-between items-end mb-4">
-                     <div>
-                        <span className="text-xs text-gray-400 uppercase font-bold">Biaya</span>
-                        <div className="text-lg font-bold text-emerald-600">{lomba.price}</div>
-                     </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {COMPETITION_DATA.map((lomba) => (
+          <div key={lomba.id} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow">
+            <div className={`w-14 h-14 rounded-2xl ${lomba.bgLight} ${lomba.color.split(' ')[1]} flex items-center justify-center mb-6`}>
+              <lomba.icon size={28} />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">{lomba.title}</h3>
+            <div className="inline-block bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full mb-4 w-fit">
+              {lomba.target}
+            </div>
+            <p className="text-sm text-gray-600 mb-8 flex-grow">{lomba.shortDesc}</p>
+            
+            <div className="flex gap-3 mt-auto">
+              <button 
+                onClick={() => setSelected(lomba)} 
+                className="flex-1 bg-gray-50 hover:bg-gray-100 text-emerald-700 font-bold py-3 rounded-xl border border-gray-200 transition-colors text-sm"
+              >
+                Detail
+              </button>
+              <button 
+                onClick={() => setActiveTab('daftar')} 
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-sm transition-colors text-sm"
+              >
+                Daftar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* DETAIL MODAL OVERLAY */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelected(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
+            >
+              <div className={`${selected.bgLight} p-6 md:p-8 flex items-start justify-between relative`}>
+                <div className="flex gap-4 items-center">
+                  <div className={`p-4 rounded-2xl bg-white shadow-sm ${selected.color.split(' ')[1]}`}>
+                    <selected.icon size={32} />
                   </div>
-                  <button 
-                    onClick={() => setSelectedLomba(lomba)}
-                    className="w-full py-3 border border-emerald-200 text-emerald-700 font-bold rounded-lg hover:bg-emerald-50 transition-colors mb-3 flex justify-center items-center"
-                  >
-                    <Info className="w-4 h-4 mr-2" /> Detail & Aturan
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('daftar')}
-                    className="w-full py-3 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg"
-                  >
-                    Daftar Sekarang
-                  </button>
+                  <div>
+                    <h3 className="text-2xl font-black text-gray-900">{selected.title}</h3>
+                    <p className={`font-semibold ${selected.color.split(' ')[1]}`}>{selected.price}</p>
+                  </div>
+                </div>
+                <button onClick={() => setSelected(null)} className="p-2 bg-white/50 hover:bg-white rounded-full transition-colors"><X size={20}/></button>
+              </div>
+              
+              <div className="p-6 md:p-8 overflow-y-auto space-y-6 bg-white flex-grow">
+                <div>
+                  <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Tema Utama</h4>
+                  <p className="text-lg font-bold text-emerald-900 bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                    "{selected.theme}"
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Sub Tema</h4>
+                    <ul className="space-y-2">
+                      {selected.subThemes.map((sub, i) => (
+                        <li key={i} className="flex items-start text-sm text-gray-700">
+                          <CheckCircle size={16} className="text-emerald-500 mr-2 shrink-0 mt-0.5" />
+                          <span>{sub}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Timeline Lomba</h4>
+                    <ul className="space-y-3">
+                      {selected.timeline.map((time, i) => {
+                        const parts = time.split(':');
+                        return (
+                          <li key={i} className="text-sm border-l-2 border-emerald-200 pl-3">
+                            <div className="font-semibold text-gray-900">{parts[0]}</div>
+                            <div className="text-gray-500">{parts[1]}</div>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      {selectedLomba && <DetailModal item={selectedLomba} onClose={() => setSelectedLomba(null)} />}
+
+              <div className="p-6 border-t border-gray-100 bg-gray-50 flex gap-4">
+                <a href="https://drive.google.com/file/d/1K6Wxe2eUqa1mSP34-9yTPn4jCG5ztfSM/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="flex-1 flex justify-center items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-xl transition-colors">
+                  <Download size={18} /> Panduan PDF
+                </a>
+                <button onClick={() => { setSelected(null); setActiveTab('daftar'); }} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition-colors">
+                  Daftar Sekarang
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-const SubmissionForm = ({ user }) => {
+// ==========================================
+// VIEW: PENDAFTARAN (FORM)
+// ==========================================
+const ViewDaftar = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [lomba, setLomba] = useState('LKTI');
   
   const [formData, setFormData] = useState({
-    teamName: '',
-    leaderName: '',
-    email: '',
-    phone: '',
-    institution: '',
-    driveLink: ''
+    teamName: '', leaderName: '', email: '', phone: '', institution: '', driveLink: ''
   });
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!user) { alert("Menunggu koneksi ke server..."); return; }
 
     setLoading(true);
@@ -413,7 +396,7 @@ const SubmissionForm = ({ user }) => {
       setFormData({ teamName: '', leaderName: '', email: '', phone: '', institution: '', driveLink: '' });
     } catch (error) {
       console.error("Error submitting:", error);
-      alert("Gagal mengirim data. Pastikan koneksi internet lancar.");
+      alert("Gagal mengirim data. Coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -421,17 +404,17 @@ const SubmissionForm = ({ user }) => {
 
   if (success) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center px-4 bg-emerald-50">
-        <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-md w-full text-center border-t-8 border-emerald-500">
-          <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-emerald-100 mb-6 animate-bounce">
-            <CheckCircle className="h-12 w-12 text-emerald-600" />
+      <div className="h-full flex items-center justify-center pb-24 md:pb-0">
+        <div className="bg-white p-10 rounded-3xl shadow-xl max-w-md w-full text-center border border-gray-100">
+          <div className="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-emerald-100 mb-6 animate-pulse">
+            <CheckCircle className="h-14 w-14 text-emerald-600" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Terima Kasih!</h2>
-          <p className="text-gray-600 mb-8 text-lg">
-            Pendaftaran tim <b>{formData.teamName || "Anda"}</b> telah kami terima.
+          <h2 className="text-3xl font-black text-gray-900 mb-2">Berhasil!</h2>
+          <p className="text-gray-500 mb-8">
+            Pendaftaran <b>{formData.teamName || "Peserta"}</b> untuk kompetisi {lomba} telah tersimpan.
           </p>
-          <button onClick={() => setSuccess(false)} className="w-full bg-gray-100 text-gray-800 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors">
-            Kembali ke Form
+          <button onClick={() => setSuccess(false)} className="w-full bg-emerald-50 text-emerald-800 py-3 rounded-xl font-bold hover:bg-emerald-100 transition-colors">
+            Daftar Lagi
           </button>
         </div>
       </div>
@@ -439,150 +422,91 @@ const SubmissionForm = ({ user }) => {
   }
 
   return (
-    <div className="py-16 bg-emerald-50 min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
-          <div className="bg-emerald-900 py-8 px-8 flex justify-between items-center relative overflow-hidden">
-            <div className="relative z-10">
-              <h2 className="text-3xl font-bold text-white">Formulir Pendaftaran</h2>
-              <p className="text-emerald-200 mt-2">Pastikan data yang diisi valid dan sesuai identitas.</p>
+    <div className="pb-24 md:pb-6 max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-black text-gray-900">Form Pendaftaran EPIC</h1>
+        <p className="text-gray-500">Lengkapi data diri dan tim dengan benar.</p>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        <form onSubmit={handleSubmit} className="p-6 md:p-10 space-y-8">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Kategori Kompetisi</label>
+            <div className="grid grid-cols-3 gap-3">
+              {['LKTI', 'Essay', 'Fotografi'].map((type) => (
+                <button
+                  key={type} type="button" onClick={() => setLomba(type)}
+                  className={`py-3 px-2 text-sm md:text-base font-bold rounded-xl border-2 transition-all ${
+                    lomba === type ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-white border-gray-200 text-gray-500 hover:border-emerald-200'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
             </div>
-            <Leaf className="text-emerald-800 w-32 h-32 absolute -right-6 -bottom-6 opacity-50 rotate-45" />
           </div>
-          
-          <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Pilih Kategori</label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {['LKTI', 'Essay', 'Fotografi'].map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setLomba(type)}
-                    className={`py-4 px-4 text-base font-bold rounded-xl border-2 focus:outline-none transition-all ${
-                      lomba === type
-                        ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-md transform scale-105'
-                        : 'bg-white border-gray-200 text-gray-500 hover:border-emerald-200'
-                    }`}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Nama Tim / Karya</label>
+              <input required type="text" name="teamName" value={formData.teamName} onChange={handleChange}
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder={lomba === 'LKTI' ? "Contoh: Tim Inovasi" : "Judul / Nama"} />
             </div>
-
-            <div className="space-y-6">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Tim / Peserta</label>
-                  <input
-                    required
-                    type="text"
-                    name="teamName"
-                    value={formData.teamName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-shadow"
-                    placeholder={lomba === 'LKTI' ? "Contoh: Tim Agrososial" : "Nama Peserta"}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Ketua / Lengkap</label>
-                  <input
-                    required
-                    type="text"
-                    name="leaderName"
-                    value={formData.leaderName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-shadow"
-                    placeholder="Nama Lengkap"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Instansi / Sekolah</label>
-                  <input
-                    required
-                    type="text"
-                    name="institution"
-                    value={formData.institution}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-shadow"
-                    placeholder="Universitas / SMA..."
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Nomor WhatsApp</label>
-                  <input
-                    required
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-shadow"
-                    placeholder="08xxxxxxxxxx"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Email Aktif</label>
-                <input
-                  required
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-shadow"
-                  placeholder="email@example.com"
-                />
-              </div>
-
-              <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 flex flex-col md:flex-row gap-4">
-                <div className="flex-shrink-0">
-                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                     <ExternalLink className="w-5 h-5" />
-                   </div>
-                </div>
-                <div className="flex-grow">
-                  <label className="block text-base font-bold text-blue-900 mb-1">
-                    Link Google Drive
-                  </label>
-                  <p className="text-sm text-blue-700 mb-3">
-                    Harap upload berkas (Karya, Scan Identitas, Bukti Bayar) ke folder Google Drive Anda, 
-                    ubah akses menjadi <strong>"Anyone with link"</strong>, lalu tempel linknya di sini.
-                  </p>
-                  <input
-                    required
-                    type="url"
-                    name="driveLink"
-                    value={formData.driveLink}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                    placeholder="https://drive.google.com/drive/folders/..."
-                  />
-                </div>
-              </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Nama Lengkap Ketua / Peserta</label>
+              <input required type="text" name="leaderName" value={formData.leaderName} onChange={handleChange}
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder="Nama Lengkap" />
             </div>
-
-            <div className="pt-4 border-t border-gray-100">
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full flex justify-center py-4 px-6 border border-transparent rounded-xl shadow-lg text-lg font-bold text-white bg-emerald-600 hover:bg-emerald-700 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-              >
-                {loading ? 'Sedang Mengirim...' : 'Kirim Pendaftaran Saya'}
-              </button>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Instansi / Asal Sekolah</label>
+              <input required type="text" name="institution" value={formData.institution} onChange={handleChange}
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder="UNSOED / SMA N 1..." />
             </div>
-          </form>
-        </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp Aktif</label>
+              <input required type="tel" name="phone" value={formData.phone} onChange={handleChange}
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder="08xxxxxxxxxx" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Email Aktif</label>
+            <input required type="email" name="email" value={formData.email} onChange={handleChange}
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+              placeholder="email@example.com" />
+          </div>
+
+          <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+            <label className="block text-base font-bold text-blue-900 mb-2 flex items-center">
+              <ExternalLink size={18} className="mr-2" /> Link Folder Google Drive
+            </label>
+            <p className="text-sm text-blue-700 mb-4">
+              Jadikan folder <strong>"Anyone with link"</strong>. Isi folder: Karya, Identitas (KTM/Kartu Pelajar), dan Bukti Pembayaran.
+            </p>
+            <input required type="url" name="driveLink" value={formData.driveLink} onChange={handleChange}
+              className="w-full px-4 py-3 bg-white border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="https://drive.google.com/drive/folders/..." />
+          </div>
+
+          <button type="submit" disabled={loading}
+            className={`w-full py-4 rounded-xl text-lg font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md transition-all ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+          >
+            {loading ? 'Menyimpan...' : 'Kirim Pendaftaran'}
+          </button>
+        </form>
       </div>
     </div>
   );
 };
 
-const AdminPanel = ({ user }) => {
+// ==========================================
+// VIEW: ADMIN PANEL
+// ==========================================
+const ViewAdmin = ({ user }) => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -591,7 +515,7 @@ const AdminPanel = ({ user }) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === 'himasita2026') {
+    if (password === 'epic2026') { 
       setIsAuthenticated(true);
       setErrorMsg('');
     } else {
@@ -603,13 +527,12 @@ const AdminPanel = ({ user }) => {
     if (!user || !isAuthenticated) return;
     
     const q = query(collection(db, COLLECTION_NAME), orderBy('createdAt', 'desc'));
-    
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setSubmissions(data);
       setLoading(false);
     }, (error) => {
-        console.error("Error fetching subs:", error);
+        console.error("Error fetching:", error);
         setLoading(false);
     });
 
@@ -618,200 +541,228 @@ const AdminPanel = ({ user }) => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-emerald-900 flex items-center justify-center px-4">
-        <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm">
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-emerald-700" />
+      <div className="h-full flex items-center justify-center pb-24 md:pb-0">
+        <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm border border-gray-100">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-emerald-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Admin Login</h2>
-            <p className="text-gray-500 text-sm">Area khusus panitia EPIC 2026</p>
+            <h2 className="text-2xl font-black text-gray-900">Admin EPIC</h2>
+            <p className="text-gray-500 text-sm mt-1">Area khusus panitia inti</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                placeholder="Masukkan Password Admin"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {errorMsg && <p className="text-red-500 text-xs mt-2 text-center">{errorMsg}</p>}
-            </div>
-            <button type="submit" className="w-full bg-emerald-700 text-white py-3 rounded-lg font-bold hover:bg-emerald-800 transition-colors">
+            <input
+              type="password"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-center"
+              placeholder="Masukkan Password"
+              value={password} onChange={(e) => setPassword(e.target.value)}
+            />
+            {errorMsg && <p className="text-red-500 text-xs text-center">{errorMsg}</p>}
+            <button type="submit" className="w-full bg-emerald-900 text-white py-3 rounded-xl font-bold hover:bg-emerald-950 transition-colors">
               Masuk Dashboard
             </button>
+            <p className="text-[10px] text-center text-gray-400">Gunakan: epic2026</p>
           </form>
-          <div className="mt-6 text-center text-xs text-gray-400 border-t border-gray-100 pt-4">
-          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-gray-500">Rekapitulasi data pendaftar masuk</p>
-          </div>
-          <button onClick={() => setIsAuthenticated(false)} className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50">
-            Keluar
-          </button>
+    <div className="pb-24 md:pb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+          <h1 className="text-3xl font-black text-gray-900">Dashboard Pendaftar</h1>
+          <p className="text-gray-500">Rekap data peserta EPIC 2026</p>
         </div>
-        
-        {loading ? (
-          <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700"></div></div>
-        ) : submissions.length === 0 ? (
-          <div className="bg-white p-16 rounded-2xl shadow text-center border-2 border-dashed border-gray-300">
-            <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg">Belum ada data pendaftaran masuk.</p>
-          </div>
-        ) : (
-          <div className="bg-white shadow-xl overflow-hidden rounded-2xl border border-gray-200">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    {['Waktu', 'Kategori', 'Tim / Peserta', 'Instansi', 'Kontak', 'Berkas'].map(h => (
-                      <th key={h} className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {submissions.map((sub, idx) => (
-                    <tr key={sub.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {sub.createdAt ? new Date(sub.createdAt.seconds * 1000).toLocaleDateString('id-ID', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full 
-                          ${sub.category === 'LKTI' ? 'bg-blue-100 text-blue-800' : 
-                            sub.category === 'Essay' ? 'bg-yellow-100 text-yellow-800' : 
-                            'bg-purple-100 text-purple-800'}`}>
-                          {sub.category}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-bold text-gray-900">{sub.teamName}</div>
-                        <div className="text-xs text-gray-500 mt-1">{sub.leaderName}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{sub.institution}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div className="flex items-center"><Phone className="w-3 h-3 mr-1"/> {sub.phone}</div>
-                        <div className="text-xs mt-1 text-gray-400">{sub.email}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <a href={sub.driveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-emerald-600 font-bold hover:text-emerald-800 bg-emerald-50 px-3 py-1 rounded-md hover:bg-emerald-100 transition-colors">
-                          <ExternalLink className="w-3 h-3 mr-1" /> Link Drive
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+        <button onClick={() => setIsAuthenticated(false)} className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold hover:bg-gray-50 shadow-sm text-sm">
+          Keluar Admin
+        </button>
       </div>
+      
+      {loading ? (
+        <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600"></div></div>
+      ) : submissions.length === 0 ? (
+        <div className="bg-white p-16 rounded-3xl shadow-sm border border-gray-100 text-center">
+          <Users className="w-16 h-16 text-gray-200 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg font-medium">Belum ada data pendaftar.</p>
+        </div>
+      ) : (
+        <div className="bg-white shadow-sm rounded-3xl border border-gray-100 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-100">
+              <thead className="bg-gray-50">
+                <tr>
+                  {['Tanggal', 'Lomba', 'Peserta/Tim', 'Instansi', 'Kontak', 'Aksi'].map(h => (
+                    <th key={h} className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-50">
+                {submissions.map((sub) => (
+                  <tr key={sub.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {sub.createdAt ? new Date(sub.createdAt.seconds * 1000).toLocaleDateString('id-ID', {day:'numeric', month:'short'}) : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-3 py-1 inline-flex text-xs font-bold rounded-md 
+                        ${sub.category === 'LKTI' ? 'bg-blue-50 text-blue-700' : sub.category === 'Essay' ? 'bg-yellow-50 text-yellow-700' : 'bg-purple-50 text-purple-700'}`}>
+                        {sub.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-bold text-gray-900">{sub.teamName}</div>
+                      <div className="text-xs text-gray-500 mt-0.5">{sub.leaderName}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{sub.institution}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="flex items-center"><Phone className="w-3 h-3 mr-1"/> {sub.phone}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <a href={sub.driveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-emerald-700 font-bold hover:text-emerald-900 bg-emerald-50 px-3 py-1.5 rounded-lg transition-colors">
+                        Buka Folder <ExternalLink className="w-3 h-3 ml-1.5" />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-const Footer = () => (
-  <footer className="bg-emerald-950 text-emerald-200 pt-16 pb-8">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
-      <div className="col-span-1 md:col-span-2">
-        <div className="flex items-center text-white text-2xl font-bold mb-6 tracking-wide">
-          <Leaf className="mr-2 text-yellow-400" /> HIMASITA UNSOED
-        </div>
-        <p className="text-sm text-emerald-400 max-w-sm leading-relaxed mb-6">
-          Himpunan Mahasiswa Proteksi Tanaman (HIMASITA) Universitas Jenderal Soedirman. 
-          Bergerak bersama mewujudkan pertanian tangguh melalui perlindungan tanaman yang presisi dan berkelanjutan.
-        </p>
-        <div className="flex space-x-4">
-           <div className="w-8 h-8 bg-emerald-900 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-emerald-900 transition-colors cursor-pointer"><Mail className="w-4 h-4"/></div>
-           <div className="w-8 h-8 bg-emerald-900 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-emerald-900 transition-colors cursor-pointer"><ExternalLink className="w-4 h-4"/></div>
-        </div>
-      </div>
-      
-      <div>
-        <h4 className="text-white font-bold mb-6 border-b border-emerald-800 pb-2 inline-block">Navigasi Cepat</h4>
-        <ul className="space-y-3 text-sm">
-          <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> Tentang EPIC 2026</a></li>
-          <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> Panduan Lomba</a></li>
-          <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> Timeline Kegiatan</a></li>
-          <li><a href="#" className="hover:text-yellow-400 transition-colors flex items-center"><ChevronRight className="w-3 h-3 mr-1"/> FAQ</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 className="text-white font-bold mb-6 border-b border-emerald-800 pb-2 inline-block">Hubungi Kami</h4>
-        <ul className="space-y-4 text-sm">
-          <li className="flex items-start">
-            <MapPin className="w-5 h-5 mr-3 text-yellow-500 flex-shrink-0 mt-0.5" /> 
-            <span>Sekretariat HIMASITA, Fak. Pertanian UNSOED, Purwokerto, Jawa Tengah</span>
-          </li>
-          <li className="flex items-center">
-            <Mail className="w-5 h-5 mr-3 text-yellow-500 flex-shrink-0" /> 
-            <span>himasita.site1@gmail.com</span>
-          </li>
-          <li className="flex items-center">
-            <Phone className="w-5 h-5 mr-3 text-yellow-500 flex-shrink-0" /> 
-            <span>+62 812-3456-7890 (Narahubung)</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div className="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-emerald-900 text-center text-xs text-emerald-500">
-      &copy; 2026 EPIC (Excellent Plant Protection Innovation Competition) - HIMASITA UNSOED.
-  </footer>
-);
-
+// ==========================================
+// ROOT APP COMPONENT (DASHBOARD LAYOUT)
+// ==========================================
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [user, setUser] = useState(null);
 
+  // Authentication
   useEffect(() => {
-    // Autentikasi Anonim agar user bisa submit form tanpa login
     const initAuth = async () => {
       if (auth) {
-        try {
-          await signInAnonymously(auth);
-        } catch (error) {
-          console.error("Gagal login anonim:", error);
-        }
+        try { await signInAnonymously(auth); } 
+        catch (error) { console.error("Auth error:", error); }
       }
     };
-    
     initAuth();
-    
     if (auth) {
       const unsubscribe = onAuthStateChanged(auth, setUser);
       return () => unsubscribe();
     }
   }, []);
 
+  // Menu Configuration 
+  const NAV_MENU = [
+    { id: 'home', label: 'Dashboard', icon: Home },
+    { id: 'tentang', label: 'Tentang EPIC', icon: Info },
+    { id: 'lomba', label: 'Kategori Lomba', icon: LayoutGrid },
+    { id: 'daftar', label: 'Pendaftaran', icon: FileText },
+    { id: 'admin', label: 'Admin Panel', icon: Settings },
+  ];
+
   return (
-    <div className="font-sans text-gray-900 bg-white min-h-screen flex flex-col">
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="font-sans text-gray-900 bg-gray-50 min-h-screen flex overflow-hidden">
       
-      <main className="flex-grow">
-        {activeTab === 'home' && (
-          <>
-            <Hero setActiveTab={setActiveTab} />
-            <Timeline />
-            <Competitions setActiveTab={setActiveTab} />
-          </>
-        )}
-        {activeTab === 'lomba' && <Competitions setActiveTab={setActiveTab} />}
-        {activeTab === 'daftar' && <SubmissionForm user={user} />}
-        {activeTab === 'admin' && <AdminPanel user={user} />}
+      {/* SIDEBAR (DESKTOP) */}
+      <aside className="hidden md:flex flex-col w-72 bg-emerald-950 text-white h-screen fixed left-0 top-0 shadow-2xl z-50">
+        <div className="p-8 pb-4 border-b border-emerald-900">
+          <div className="flex items-center gap-3 mb-4">
+            <img src="/logo-epic.png" alt="EPIC" className="h-12 w-auto object-contain bg-white rounded-lg p-1.5 shadow-md" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+            <div className="hidden h-12 w-12 bg-yellow-400 rounded-lg items-center justify-center text-emerald-900 font-black text-sm shadow-md">EPIC</div>
+            
+            <div className="w-px h-8 bg-emerald-800 mx-1"></div> 
+            
+            <img src="/logo-himasita.png" alt="HIMASITA" className="h-12 w-auto object-contain bg-white rounded-lg p-1.5 shadow-md" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+            <div className="hidden h-12 w-12 bg-emerald-800 rounded-lg items-center justify-center text-emerald-100 font-bold text-xs shadow-md border border-emerald-700">HMT</div>
+          </div>
+          
+          <h1 className="text-2xl font-black tracking-tight text-white mt-2">EPIC 2026</h1>
+          <p className="text-emerald-400 text-[10px] tracking-widest uppercase font-bold mt-1">HIMASITA UNSOED</p>
+        </div>
+        
+        <nav className="flex-1 px-4 mt-6 space-y-1.5 overflow-y-auto">
+          {NAV_MENU.map((menu) => (
+            <button
+              key={menu.id}
+              onClick={() => setActiveTab(menu.id)}
+              className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl font-bold transition-all ${
+                activeTab === menu.id 
+                ? 'bg-emerald-800 text-white shadow-inner' 
+                : 'text-emerald-400 hover:bg-emerald-900 hover:text-emerald-100'
+              }`}
+            >
+              <menu.icon size={20} className={activeTab === menu.id ? 'text-yellow-400' : ''} />
+              {menu.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-6 border-t border-emerald-900">
+          <div className="bg-emerald-900/50 p-4 rounded-2xl text-xs text-emerald-300 text-center border border-emerald-800/50">
+            Support by <br/><span className="text-white font-bold text-sm">HIMASITA Kabinet 2026</span>
+          </div>
+        </div>
+      </aside>
+
+      {/* MOBILE TOP HEADER */}
+      <header className="md:hidden fixed top-0 left-0 w-full bg-emerald-950 text-white p-3 flex justify-between items-center z-40 shadow-md">
+         <div className="flex items-center gap-2">
+            <img src="/logo-epic.png" alt="EPIC" className="h-8 w-auto object-contain bg-white rounded-md p-1" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+            <div className="hidden h-8 w-8 bg-yellow-400 rounded-md items-center justify-center text-emerald-900 font-black text-[10px]">EPC</div>
+            
+            <img src="/logo-himasita.png" alt="HIMASITA" className="h-8 w-auto object-contain bg-white rounded-md p-1" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+            <div className="hidden h-8 w-8 bg-emerald-800 rounded-md items-center justify-center text-emerald-100 font-bold text-[10px] border border-emerald-700">HMT</div>
+         </div>
+         <h1 className="font-black text-lg tracking-widest text-emerald-50">EPIC 2026</h1>
+      </header>
+
+      {/* MAIN CONTENT AREA */}
+      <main className="flex-1 h-screen overflow-y-auto md:ml-72 relative scroll-smooth pt-20 md:pt-0">
+        <div className="max-w-7xl mx-auto p-4 md:p-10 min-h-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              {activeTab === 'home' && <ViewHome setActiveTab={setActiveTab} />}
+              {activeTab === 'tentang' && <ViewTentang />}
+              {activeTab === 'lomba' && <ViewLomba setActiveTab={setActiveTab} />}
+              {activeTab === 'daftar' && <ViewDaftar user={user} />}
+              {activeTab === 'admin' && <ViewAdmin user={user} />}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </main>
 
-      <Footer />
+      {/* MOBILE BOTTOM NAVIGATION (APP STYLE) */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center p-2 z-50 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+        {NAV_MENU.map((menu) => (
+          <button
+            key={menu.id}
+            onClick={() => setActiveTab(menu.id)}
+            className={`flex flex-col items-center justify-center w-full py-2 ${
+              activeTab === menu.id ? 'text-emerald-700' : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <div className={`p-1.5 rounded-full mb-1 transition-colors ${activeTab === menu.id ? 'bg-emerald-100' : ''}`}>
+              <menu.icon size={20} />
+            </div>
+            <span className={`text-[10px] font-bold ${activeTab === menu.id ? 'text-emerald-700' : ''}`}>
+              {menu.label}
+            </span>
+          </button>
+        ))}
+      </nav>
+
     </div>
   );
 }
